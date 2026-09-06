@@ -1,6 +1,7 @@
 QT += widgets
 QT += positioning
 QT += network
+QT += serialport
 
 CONFIG += c++17
 

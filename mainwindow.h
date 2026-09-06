@@ -37,4 +37,6 @@ private slots:
     void slotDataUpdatedString(QString data);
     void slotError(QString error);
     void slotDataUpdate(QPointF coordinates);
+    void slotSourceChanged(int index);
+
 };

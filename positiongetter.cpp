@@ -29,11 +29,10 @@ PositionGetter::PositionGetter()
 }
 
 
-
-
 void PositionGetter::setupPositioning()
 {
     emit signalStringError("Available position sources:"+ QGeoPositionInfoSource::availableSources().join(" "));
+
 
     m_source = QGeoPositionInfoSource::createDefaultSource(this);
 
@@ -72,4 +71,57 @@ void PositionGetter::slotPositionUpdated(const QGeoPositionInfo &info)
                               .arg(info.timestamp().toString(Qt::ISODate)));
     emit signalPositionUpdate(QPointF(c.longitude(),c.latitude()));
 
+}
+
+void PositionGetter::setSource(const QString &sourceId)
+{
+    if (m_source)
+    {
+        m_source->stopUpdates();
+        delete m_source;
+        m_source = nullptr;
+    }
+
+    if (m_serialPort)
+    {
+        m_serialPort->close();
+        delete m_serialPort;
+        m_serialPort = nullptr;
+    }
+
+    if (sourceId == "__DEFAULT__")
+    {
+        m_source = QGeoPositionInfoSource::createDefaultSource(this);
+
+        if (!m_source)
+        {
+            emit signalStringError("No default source available");
+            return;
+        }
+    }
+    else
+    {
+        m_serialPort = new QSerialPort(this);
+
+        m_serialPort->setPortName(sourceId);
+        m_serialPort->setBaudRate(QSerialPort::Baud9600);
+
+        if (!m_serialPort->open(QIODevice::ReadOnly))
+        {
+            emit signalStringError(
+                QString("Cannot open %1").arg(sourceId));
+            return;
+        }
+
+        QNmeaPositionInfoSource *nmeaSource =  new QNmeaPositionInfoSource(QNmeaPositionInfoSource::RealTimeMode, this);
+
+        nmeaSource->setDevice(m_serialPort);
+
+        m_source = nmeaSource;
+    }
+
+    connect(m_source,&QGeoPositionInfoSource::positionUpdated,this,&PositionGetter::slotPositionUpdated);
+    connect(m_source,&QGeoPositionInfoSource::errorOccurred,this,&PositionGetter::slotErrorOccurred);
+
+    m_source->startUpdates();
 }

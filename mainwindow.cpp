@@ -4,6 +4,7 @@
 #include <QVBoxLayout>
 #include <QWidget>
 #include <QDebug>
+#include <QtSerialPort/QSerialPortInfo>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent),
@@ -20,7 +21,31 @@ MainWindow::MainWindow(QWidget *parent)
 
     connect(&positionGetter,&PositionGetter::signalPositionUpdate,this,&MainWindow::slotDataUpdate);
 
-    positionGetter.setupPositioning();
+    connect(ui->comboBox_port,
+            &QComboBox::currentIndexChanged,
+            this,
+            &MainWindow::slotSourceChanged);
+
+  //  positionGetter.setupPositioning();
+
+
+
+    ui->comboBox_port->addItem("Default Qt source", "__DEFAULT__");
+
+    const QList<QSerialPortInfo> ports =
+        QSerialPortInfo::availablePorts();
+
+    for (const QSerialPortInfo &port : ports)
+    {
+        ui->comboBox_port->addItem(
+            QString("NMEA: %1 (%2)")
+                .arg(port.portName())
+                .arg(port.description()),
+            port.portName());
+    }
+
+
+
 
 
 }
@@ -42,6 +67,15 @@ void MainWindow::slotDataUpdate(QPointF coordinates)
 {
     sendCoordinates(coordinates,ui->lineEdit_portNumber->text().toUInt());
 }
+
+
+void MainWindow::slotSourceChanged(int index)
+{
+    QString sourceId = ui->comboBox_port->itemData(index).toString();
+
+    positionGetter.setSource(sourceId);
+}
+
 
 
 void MainWindow::slotError(QString error)
@@ -76,3 +110,5 @@ void MainWindow::sendCoordinates(QPointF coordinates, qint16 port)
 
     client.odesliRaw("127.0.0.1", data,port);
 }
+
+

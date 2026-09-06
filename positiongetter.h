@@ -5,7 +5,15 @@
 #include <QLocationPermission>
 #include <QCoreApplication>
 #include <QGeoPositionInfoSource>
+#include <QNmeaPositionInfoSource>
 #include <QPointF>
+#include <QSerialPort>
+
+enum class PositionSourceType
+    {
+        Default,
+        NmeaSerial
+    };
 
 class PositionGetter : public QObject
 {
@@ -14,7 +22,14 @@ public:
     PositionGetter();
 
     QGeoPositionInfoSource *m_source = nullptr;
+    QSerialPort *m_serialPort;
+
     void setupPositioning();
+
+    void startDefaultSource();
+
+    void slotPortChanged(const QString &portName);
+    void setSource(const QString &sourceId);
 public slots:
 
 private slots:
