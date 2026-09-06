@@ -22,7 +22,7 @@ public:
     PositionGetter();
 
     QGeoPositionInfoSource *m_source = nullptr;
-    QSerialPort *m_serialPort;
+    QSerialPort m_serialPort;
 
     void setupPositioning();
 

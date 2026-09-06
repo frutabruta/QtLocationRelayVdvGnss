@@ -65,10 +65,12 @@ void PositionGetter::slotErrorOccurred(QGeoPositionInfoSource::Error error)
 void PositionGetter::slotPositionUpdated(const QGeoPositionInfo &info)
 {
     const QGeoCoordinate c = info.coordinate();
-    emit signalStringData(QString("Lat/Lon: %1, %2  (updated %3)")
-                              .arg(c.latitude())
-                              .arg(c.longitude())
-                              .arg(info.timestamp().toString(Qt::ISODate)));
+    emit signalStringData(QString("Lat/Lon: %1, %2  \n(updated %3) \n source %4").arg(
+                              QString::number(c.latitude()),
+                              QString::number(c.longitude()),
+                              info.timestamp().toLocalTime().toString(Qt::ISODate),
+                              m_source->sourceName()));
+
     emit signalPositionUpdate(QPointF(c.longitude(),c.latitude()));
 
 }
@@ -82,12 +84,13 @@ void PositionGetter::setSource(const QString &sourceId)
         m_source = nullptr;
     }
 
+    /*
     if (m_serialPort)
     {
         m_serialPort->close();
         delete m_serialPort;
         m_serialPort = nullptr;
-    }
+    } */
 
     if (sourceId == "__DEFAULT__")
     {
@@ -101,21 +104,54 @@ void PositionGetter::setSource(const QString &sourceId)
     }
     else
     {
-        m_serialPort = new QSerialPort(this);
+        //m_serialPort = new QSerialPort(this);
 
-        m_serialPort->setPortName(sourceId);
-        m_serialPort->setBaudRate(QSerialPort::Baud9600);
+        /*
+        port.setBaudRate(1200);
+        port.setDataBits(QSerialPort::Data7);
+        port.setParity(QSerialPort::EvenParity);
+        port.setStopBits(QSerialPort::TwoStop);
+        port.setFlowControl(QSerialPort::NoFlowControl);
 
-        if (!m_serialPort->open(QIODevice::ReadOnly))
+        //serial.close();
+        serial.setPortName(mSerialPortName);
+
+        if (!serial.open(QIODevice::ReadWrite))
         {
-            emit signalStringError(
-                QString("Cannot open %1").arg(sourceId));
+            qDebug()<<(tr("Can't open %1, error code %2")
+                             .arg(serial.portName()).arg(serial.error()));
             return;
         }
 
+        */
+
+
+
+
+        m_serialPort.setPortName(sourceId);
+        m_serialPort.setBaudRate(QSerialPort::Baud9600);
+
+        if(!m_serialPort.isOpen())
+        {
+            if (!m_serialPort.open(QIODevice::ReadOnly))
+            {
+                emit signalStringError(
+                    QString("Cannot open %1").arg(sourceId));
+                return;
+            }
+        }
+        else
+        {
+            emit signalStringError(
+                QString("Port already opened %1").arg(sourceId));
+        }
+
+
+
         QNmeaPositionInfoSource *nmeaSource =  new QNmeaPositionInfoSource(QNmeaPositionInfoSource::RealTimeMode, this);
 
-        nmeaSource->setDevice(m_serialPort);
+        nmeaSource->setDevice(&m_serialPort);
+        nmeaSource->setObjectName("serial");
 
         m_source = nmeaSource;
     }

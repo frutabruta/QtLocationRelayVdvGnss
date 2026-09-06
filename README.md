@@ -1,10 +1,16 @@
 # QtLocationRelayVdvGnss
 
 Program to get GNSS location from a Windows computer and to relay it over UDP to VDV301tester, using fake GnssLocationService.
+NMEA messages through COM port are also supported.
 
 ## Changelog
+- 20260906_2034
+    - ui reorder
+    - fixed port reopen
+
 - 20260906_1805
     - serial port demo
+
 - 20260906_1654
     - error log now appends the text
 

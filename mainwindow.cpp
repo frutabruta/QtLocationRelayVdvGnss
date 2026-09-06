@@ -38,10 +38,7 @@ MainWindow::MainWindow(QWidget *parent)
     for (const QSerialPortInfo &port : ports)
     {
         ui->comboBox_port->addItem(
-            QString("NMEA: %1 (%2)")
-                .arg(port.portName())
-                .arg(port.description()),
-            port.portName());
+            QString("NMEA: %1 (%2)").arg(port.portName(),port.description()),port.portName());
     }
 
 

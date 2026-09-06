@@ -14,65 +14,55 @@
    <string>QtLocationRelayVdvGnss</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <widget class="QPushButton" name="pushButton">
-    <property name="geometry">
-     <rect>
-      <x>410</x>
-      <y>390</y>
-      <width>80</width>
-      <height>24</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>PushButton</string>
-    </property>
-   </widget>
-   <widget class="QLabel" name="label_data">
-    <property name="geometry">
-     <rect>
-      <x>160</x>
-      <y>220</y>
-      <width>341</width>
-      <height>121</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>label data</string>
-    </property>
-   </widget>
-   <widget class="QLineEdit" name="lineEdit_portNumber">
-    <property name="geometry">
-     <rect>
-      <x>100</x>
-      <y>400</y>
-      <width>113</width>
-      <height>24</height>
-     </rect>
-    </property>
-    <property name="text">
-     <string>7755</string>
-    </property>
-   </widget>
-   <widget class="QPlainTextEdit" name="plainTextEdit_error">
-    <property name="geometry">
-     <rect>
-      <x>50</x>
-      <y>10</y>
-      <width>451</width>
-      <height>241</height>
-     </rect>
-    </property>
-   </widget>
-   <widget class="QComboBox" name="comboBox_port">
-    <property name="geometry">
-     <rect>
-      <x>540</x>
-      <y>170</y>
-      <width>181</width>
-      <height>41</height>
-     </rect>
-    </property>
-   </widget>
+   <layout class="QGridLayout" name="gridLayout">
+    <item row="2" column="0">
+     <widget class="QLabel" name="label_3">
+      <property name="text">
+       <string>Debug output</string>
+      </property>
+     </widget>
+    </item>
+    <item row="3" column="0">
+     <widget class="QPlainTextEdit" name="plainTextEdit_error"/>
+    </item>
+    <item row="10" column="0">
+     <widget class="QLabel" name="label">
+      <property name="text">
+       <string>VDV301 tester port</string>
+      </property>
+     </widget>
+    </item>
+    <item row="8" column="0">
+     <widget class="QLabel" name="label_2">
+      <property name="text">
+       <string>Location Source</string>
+      </property>
+     </widget>
+    </item>
+    <item row="9" column="0">
+     <widget class="QComboBox" name="comboBox_port"/>
+    </item>
+    <item row="4" column="0" rowspan="4" colspan="2">
+     <widget class="QLabel" name="label_data">
+      <property name="text">
+       <string>label data</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignmentFlag::AlignLeading|Qt::AlignmentFlag::AlignLeft|Qt::AlignmentFlag::AlignTop</set>
+      </property>
+      <property name="wordWrap">
+       <bool>true</bool>
+      </property>
+     </widget>
+    </item>
+    <item row="11" column="0">
+     <widget class="QLineEdit" name="lineEdit_portNumber">
+      <property name="text">
+       <string>7755</string>
+      </property>
+     </widget>
+    </item>
+   </layout>
   </widget>
   <widget class="QMenuBar" name="menubar">
    <property name="geometry">

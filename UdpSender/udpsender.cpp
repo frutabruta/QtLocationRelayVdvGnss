@@ -48,7 +48,7 @@ bool UdpSender::bindPorts(QHostAddress addr, qint16 port)
 void UdpSender::odesliRaw(QString adresa,QString  vstup, quint16 port)
 {
 
-    qDebug()<<Q_FUNC_INFO<<" "<<port;
+  //  qDebug()<<Q_FUNC_INFO<<" "<<port;
     socket->writeDatagram(vstup.toLatin1(), QHostAddress(adresa), port);
 }
 
