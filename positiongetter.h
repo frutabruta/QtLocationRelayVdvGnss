@@ -5,6 +5,7 @@
 #include <QLocationPermission>
 #include <QCoreApplication>
 #include <QGeoPositionInfoSource>
+#include <QPointF>
 
 class PositionGetter : public QObject
 {
@@ -23,6 +24,7 @@ private slots:
 signals:
     void signalStringData(QString message);
     void signalStringError(QString message);
+    void signalPositionUpdate(QPointF coordinates);
 };
 
 #endif // POSITIONGETTER_H

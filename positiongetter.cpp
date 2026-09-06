@@ -67,5 +67,6 @@ void PositionGetter::slotPositionUpdated(const QGeoPositionInfo &info)
                               .arg(c.latitude())
                               .arg(c.longitude())
                               .arg(info.timestamp().toString(Qt::ISODate)));
+    emit signalPositionUpdate(QPointF(c.longitude(),c.latitude()));
 
 }

@@ -15,8 +15,10 @@ MainWindow::MainWindow(QWidget *parent)
     // Log what plugins are actually available on this build/device
 
 
-    connect(&positionGetter,&PositionGetter::signalStringData,this,&MainWindow::slotDataUpdated );
+    connect(&positionGetter,&PositionGetter::signalStringData,this,&MainWindow::slotDataUpdatedString );
     connect(&positionGetter,&PositionGetter::signalStringError,this,&MainWindow::slotError);
+
+    connect(&positionGetter,&PositionGetter::signalPositionUpdate,this,&MainWindow::slotDataUpdate);
 
     positionGetter.setupPositioning();
 
@@ -30,12 +32,45 @@ void MainWindow::setupPositioning()
 
 
 
-void MainWindow::slotDataUpdated(QString data)
+void MainWindow::slotDataUpdatedString(QString data)
 {
     ui->label_data->setText(data);
 }
 
+
+void MainWindow::slotDataUpdate(QPointF coordinates)
+{
+    sendCoordinates(coordinates,ui->lineEdit_portNumber->text().toUInt());
+}
+
+
 void MainWindow::slotError(QString error)
 {
     ui->label_error->setText(error);
+}
+
+
+void MainWindow::sendCoordinates(QPointF coordinates, qint16 port)
+{
+    QString data=QString("<GNSSLocationService.Data>"
+                           "    <latitude>"
+                           "        <Degree>"
+                           "                           <Value>%1</Value>"
+                           "        </Degree>"
+                           "        <Direction>"
+                           "            <Value>N</Value>"
+                           "        </Direction>"
+                           "    </latitude>"
+                           "    <longitude>"
+                           "        <Degree>"
+                           "            <Value>%2</Value>"
+                           "        </Degree>"
+                           "        <Direction>"
+                           "            <Value>E</Value>"
+                           "        </Direction>"
+                           "    </longitude>"
+                           "    <GNSSType>MixedGNSSTypes</GNSSType>"
+                           "</GNSSLocationService.Data>").arg(QString::number(coordinates.y()),QString::number(coordinates.x()));
+
+    client.odesliRaw("127.0.0.1", data,port);
 }

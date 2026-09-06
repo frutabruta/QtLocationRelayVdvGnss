@@ -3,8 +3,10 @@
 #include <QMainWindow>
 #include <QGeoPositionInfoSource>
 #include <QLabel>
+#include <QPointF>
 
 #include "positiongetter.h"
+#include "UdpSender/udpsender.h"
 
 
 QT_BEGIN_NAMESPACE
@@ -18,17 +20,21 @@ class MainWindow : public QMainWindow
 public:
     explicit MainWindow(QWidget *parent = nullptr);
 
-private slots:
 
-
-    void slotDataUpdated(QString data);
-    void slotError(QString error);
 private:
-     Ui::MainWindow *ui;
+    Ui::MainWindow *ui;
+
+    UdpSender client;
+
     void setupPositioning();
 
-     PositionGetter positionGetter;
+    PositionGetter positionGetter;
 
+    void sendCoordinates(QPointF coordinates, qint16 port);
 
+private slots:
 
+    void slotDataUpdatedString(QString data);
+    void slotError(QString error);
+    void slotDataUpdate(QPointF coordinates);
 };

@@ -1,5 +1,6 @@
 QT += widgets
 QT += positioning
+QT += network
 
 CONFIG += c++17
 
@@ -8,11 +9,13 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    UdpSender/udpsender.cpp \
     main.cpp \
     mainwindow.cpp \
     positiongetter.cpp
 
 HEADERS += \
+    UdpSender/udpsender.h \
     mainwindow.h \
     positiongetter.h
 
