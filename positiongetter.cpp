@@ -2,7 +2,8 @@
 
 PositionGetter::PositionGetter()
 {
-      qDebug() << "Available position sources:" << QGeoPositionInfoSource::availableSources();
+    emit signalStringError("Available position sources:"+ QGeoPositionInfoSource::availableSources().join(" "));
+
 
     QLocationPermission perm;
     perm.setAccuracy(QLocationPermission::Precise);
@@ -32,6 +33,8 @@ PositionGetter::PositionGetter()
 
 void PositionGetter::setupPositioning()
 {
+    emit signalStringError("Available position sources:"+ QGeoPositionInfoSource::availableSources().join(" "));
+
     m_source = QGeoPositionInfoSource::createDefaultSource(this);
 
     if (!m_source) {
@@ -39,7 +42,7 @@ void PositionGetter::setupPositioning()
         return;
     }
 
-    qDebug()<<QString("Status: using \"%1\" source").arg(m_source->sourceName());
+    emit signalStringError(QString("Status: using \"%1\" source").arg(m_source->sourceName()));
 
     connect(m_source, &QGeoPositionInfoSource::positionUpdated,
             this, &PositionGetter::slotPositionUpdated);

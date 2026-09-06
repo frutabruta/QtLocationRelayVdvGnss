@@ -46,7 +46,9 @@ void MainWindow::slotDataUpdate(QPointF coordinates)
 
 void MainWindow::slotError(QString error)
 {
-    ui->label_error->setText(error);
+    qDebug()<<"error "<<error;
+    ui->plainTextEdit_error->setPlainText(ui->plainTextEdit_error->toPlainText()+"\n"+error);
+
 }
 
 
