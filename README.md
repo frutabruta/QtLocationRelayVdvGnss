@@ -3,6 +3,8 @@
 Program to get GNSS location from a Windows computer and to relay it over UDP to VDV301tester, using fake GnssLocationService.
 NMEA messages through COM port are also supported.
 
+Needs to be built using MSVC to support winrt API.
+
 ## Changelog
 - 20260906_2034
     - ui reorder
