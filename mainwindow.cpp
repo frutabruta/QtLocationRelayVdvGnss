@@ -19,7 +19,9 @@ MainWindow::MainWindow(QWidget *parent)
     connect(&positionGetter,&PositionGetter::signalStringData,this,&MainWindow::slotDataUpdatedString );
     connect(&positionGetter,&PositionGetter::signalStringError,this,&MainWindow::slotError);
 
-    connect(&positionGetter,&PositionGetter::signalPositionUpdate,this,&MainWindow::slotDataUpdate);
+    connect(&positionGetter,&PositionGetter::signalPositionUpdate,this,&MainWindow::slotDataUpdateRealPosition);
+
+    connect(&mapPlot.webSocketRelay,&WebSocketRelay::signalGnssPositionReceived,this,&MainWindow::slotMapPositionReceived);
 
     connect(ui->comboBox_port,
             &QComboBox::currentIndexChanged,
@@ -41,6 +43,8 @@ MainWindow::MainWindow(QWidget *parent)
             QString("NMEA: %1 (%2)").arg(port.portName(),port.description()),port.portName());
     }
 
+    mapPlot.mapServer.pageName="mapa_drag.html";
+    mapPlot.mapServer.setMapFilesPath(QCoreApplication::applicationDirPath()+"/mapFiles");
 
 
 
@@ -59,6 +63,14 @@ void MainWindow::slotDataUpdatedString(QString data)
     ui->label_data->setText(data);
 }
 
+void MainWindow::slotDataUpdateRealPosition(QPointF coordinates)
+{
+    if(ui->checkBox_realPositionRelay->isChecked())
+    {
+       slotDataUpdate(coordinates);
+    }
+
+}
 
 void MainWindow::slotDataUpdate(QPointF coordinates)
 {
@@ -108,4 +120,31 @@ void MainWindow::sendCoordinates(QPointF coordinates, qint16 port)
     client.odesliRaw("127.0.0.1", data,port);
 }
 
+
+
+void MainWindow::on_pushButton_dragMap_clicked()
+{
+    mapPlot.openMap();
+}
+
+
+void MainWindow::slotMapPositionReceived(double latitude, double longitude, bool centerMap)
+{
+    qDebug()<<"received: lat:"<<latitude<<" lng:"<<longitude;
+    if(ui->checkBox_dragMapRelay->isChecked())
+    {
+        slotDataUpdate(QPointF(longitude,latitude));
+    }
+}
+
+void MainWindow::on_checkBox_dragMapRelay_stateChanged(int arg1)
+{
+
+}
+
+
+void MainWindow::on_checkBox_realPositionRelay_stateChanged(int arg1)
+{
+
+}
 

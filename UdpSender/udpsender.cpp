@@ -48,7 +48,7 @@ bool UdpSender::bindPorts(QHostAddress addr, qint16 port)
 void UdpSender::odesliRaw(QString adresa,QString  vstup, quint16 port)
 {
 
-  //  qDebug()<<Q_FUNC_INFO<<" "<<port;
+    //  qDebug()<<Q_FUNC_INFO<<" "<<port;
     socket->writeDatagram(vstup.toLatin1(), QHostAddress(adresa), port);
 }
 
@@ -76,14 +76,20 @@ void UdpSender::readyRead()
         }*/
 
     socket->readDatagram(buffer.data(), buffer.size(), &sender, &senderPort);
-
-    qDebug() << "Message from: " << sender.toString();
-    qDebug() << "Message port: " << senderPort;
-    qDebug() << "Message: " << buffer;
-
     buffer= buffer.replace(char(0x00),char(0x20));
     QString vysledek=QString::fromUtf8(buffer);
-    qDebug() << "Message2: " << vysledek;
+
+    if(buffer.size()>0)
+    {
+        qDebug() << "Message from: " << sender.toString();
+        qDebug() << "Message port: " << senderPort;
+        qDebug() << "Message: " << buffer;
+        qDebug() << "Message2: " << vysledek;
+    }
+
+
+
+
     emit prijataData(vysledek.toHtmlEscaped());
 }
 

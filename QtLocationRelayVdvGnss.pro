@@ -2,6 +2,7 @@ QT += widgets
 QT += positioning
 QT += network
 QT += serialport
+QT += httpserver
 
 CONFIG += c++17
 
@@ -10,12 +11,18 @@ CONFIG += c++17
 #DEFINES += QT_DISABLE_DEPRECATED_BEFORE=0x060000    # disables all the APIs deprecated before Qt 6.0.0
 
 SOURCES += \
+    MapaVykresleni/gnsswebsocketdragmap.cpp \
+    MapaVykresleni/mapserver.cpp \
+    MapaVykresleni/websocketrelay.cpp \
     UdpSender/udpsender.cpp \
     main.cpp \
     mainwindow.cpp \
     positiongetter.cpp
 
 HEADERS += \
+    MapaVykresleni/gnsswebsocketdragmap.h \
+    MapaVykresleni/mapserver.h \
+    MapaVykresleni/websocketrelay.h \
     UdpSender/udpsender.h \
     mainwindow.h \
     positiongetter.h
